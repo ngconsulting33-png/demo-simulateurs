@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulateurs – Sologne Paris Notaires (démonstration)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--marine:#14213D;--or:#A98B4B;--off:#F7F6F2;--txt:#1D1D1B;--gris:#6B6F76;--ligne:#E1DDD0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--off);color:var(--txt);font-family:'Work Sans',system-ui,sans-serif;font-size:15px;line-height:1.45}
+header{background:var(--marine);color:#fff;padding:28px 20px 22px}
+header h1{font-family:'Fraunces',serif;font-weight:400;font-size:30px;margin:0 0 6px}
+header p{margin:0;color:#d9d3c0;font-size:14px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:18px 0 6px}
+nav button{font:inherit;font-size:13px;border:1px solid var(--marine);background:#fff;color:var(--marine);border-radius:999px;padding:8px 14px;cursor:pointer}
+nav button.on{background:var(--marine);color:#fff}
+section.sim{display:none;margin:12px 0 40px}
+section.sim.on{display:block}
+.card{background:#fff;border:1px solid var(--ligne);border-radius:12px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+@media(max-width:760px){.card{grid-template-columns:1fr}}
+.in{padding:20px;border-right:1px solid var(--ligne)}
+.out{padding:20px;background:#FBFAF6}
+@media(max-width:760px){.in{border-right:0;border-bottom:1px solid var(--ligne)}}
+.in .intro{font-size:13px;color:var(--gris);margin:0 0 14px}
+label{display:block;font-weight:600;font-size:13px;margin:14px 0 5px}
+input[type=number],select{width:100%;font:inherit;padding:10px 11px;border:1px solid #cfcab9;border-radius:8px;background:#fff;color:var(--txt)}
+.seg{display:flex;gap:0;border:1px solid var(--marine);border-radius:8px;overflow:hidden}
+.seg button{flex:1;font:inherit;font-size:13px;border:0;background:#fff;color:var(--marine);padding:9px 6px;cursor:pointer}
+.seg button.on{background:var(--marine);color:#fff}
+.chk{display:flex;gap:8px;align-items:flex-start;margin:12px 0 0;font-weight:400;font-size:13px}
+.chk input{margin-top:3px}
+.hint{font-size:12px;color:var(--gris);margin:4px 0 0}
+.big{font-family:'Fraunces',serif;font-size:38px;color:var(--marine);margin:2px 0}
+.sub{color:var(--gris);font-size:13px;margin-bottom:12px}
+.bar{display:flex;height:9px;border-radius:5px;overflow:hidden;background:#eee;margin:8px 0 16px}
+.bar span{display:block;height:100%}
+h3{font-family:'Fraunces',serif;font-weight:600;font-size:15px;margin:16px 0 6px;color:var(--marine)}
+.row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--ligne);font-size:14px}
+.row small{display:block;color:var(--gris);font-size:12px}
+.row b{white-space:nowrap}
+.tot{margin-top:14px;padding:12px;border:1px solid var(--marine);border-radius:8px;display:flex;justify-content:space-between;font-weight:600}
+.note{font-size:11.5px;color:var(--gris);margin-top:14px}
+.hide{display:none!important}
+/* comparateur */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:16px 16px 0}
+.tabs button{font:inherit;font-size:13px;border:1px solid #cfcab9;background:#fff;border-radius:999px;padding:7px 13px;cursor:pointer}
+.tabs button.on{background:var(--marine);color:#fff;border-color:var(--marine)}
+.cmp{padding:16px;display:block}
+.cmp .q{font-weight:600;margin:8px 0}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+@media(max-width:760px){.three{grid-template-columns:1fr}}
+.opt{border:1px solid var(--ligne);border-top:3px solid var(--or);border-radius:8px;padding:12px;background:#FBFAF6}
+.opt em{display:block;font-style:normal;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);margin-bottom:4px}
+footer{padding:20px 0 40px;color:var(--gris);font-size:12px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Simulateurs – Sologne Paris Notaires</h1>
+<p>Version de démonstration à tester. Estimations indicatives, sans valeur contractuelle : seule l'étude peut établir un décompte précis.</p>
+</div></header>
+
+<div class="wrap">
+<nav id="nav"></nav>
+
+<!-- 1. FRAIS D'ACHAT -->
+<section class="sim" id="s-achat"><div class="card">
+<div class="in">
+<p class="intro">Droits de mutation, rémunération du notaire et débours, selon les taux en vigueur dans votre département.</p>
+<label>Prix d'achat du bien</label><input type="number" id="a-prix" value="250000" min="0" step="1000">
+<label>Type de bien</label>
+<div class="seg" id="a-type"><button data-v="ancien" class="on">Ancien</button><button data-v="neuf">Neuf</button><button data-v="terrain">Terrain</button></div>
+<p class="hint" id="a-hint">Logement de plus de 5 ans ou déjà habité.</p>
+<label>Département du bien</label>
+<select id="a-dep">
+<option value="5">Cher (18)</option><option value="5">Loiret (45)</option><option value="5">Loir-et-Cher (41)</option><option value="5">Indre (36)</option><option value="5">Paris (75)</option><option value="5">Autre département</option>
+</select>
+<p class="hint">Taux départemental retenu : 5,00 % (à confirmer par l'étude selon le département).</p>
+<label>Mobilier inclus dans le prix (facultatif)</label><input type="number" id="a-mob" value="0" min="0" step="500">
+<p class="hint">Le mobilier, s'il est chiffré à part, n'est pas soumis aux droits de mutation.</p>
+</div>
+<div class="out" id="a-out"></div>
+</div></section>
+
+<!-- 2. DONATION -->
+<section class="sim" id="s-don"><div class="card">
+<div class="in">
+<p class="intro">Abattements, droits de donation et frais de notaire, selon le lien de parenté et ce que vous transmettez.</p>
+<label>Ce que vous donnez</label>
+<div class="seg" id="d-type"><button data-v="argent" class="on">Argent</button><button data-v="immo">Immobilier</button><button data-v="parts">Parts de société</button></div>
+<label>Montant donné (€)</label><input type="number" id="d-montant" value="100000" min="0" step="1000">
+<label>Le bénéficiaire est votre…</label>
+<select id="d-lien">
+<option value="enfant">Enfant (ou parent)</option>
+<option value="conjoint">Époux / partenaire de Pacs</option>
+<option value="petit">Petit-enfant</option>
+<option value="arriere">Arrière-petit-enfant</option>
+<option value="frere">Frère ou sœur</option>
+<option value="neveu">Neveu ou nièce</option>
+<option value="autre">Autre personne</option>
+</select>
+<label>Âge du donateur</label><input type="number" id="d-age" value="65" min="18" max="110">
+<label class="chk"><input type="checkbox" id="d-maj" checked><span>Le bénéficiaire est majeur</span></label>
+<label class="chk hide" id="d-nue-w"><input type="checkbox" id="d-nue"><span>Donner la nue-propriété seulement (je garde l'usufruit)</span></label>
+<label class="chk" id="d-manuel-w"><input type="checkbox" id="d-manuel" checked><span>Don manuel sans acte notarié (déclaration en ligne)</span></label>
+<label class="chk"><input type="checkbox" id="d-790"><span>Don d'argent finançant un logement neuf ou une rénovation énergétique (exonération jusqu'à 100 000 € si versé avant le 31/12/2026)</span></label>
+<label class="chk"><input type="checkbox" id="d-hand"><span>Le bénéficiaire est en situation de handicap</span></label>
+<label>Donations déjà reçues du même donateur depuis moins de 15 ans (€)</label><input type="number" id="d-ant" value="0" min="0" step="1000">
+</div>
+<div class="out" id="d-out"></div>
+</div></section>
+
+<!-- 3. SUCCESSION -->
+<section class="sim" id="s-suc"><div class="card">
+<div class="in">
+<p class="intro">Droits de succession et frais de notaire, selon le patrimoine transmis et les héritiers.</p>
+<label>Qui hérite ?</label>
+<select id="s-her">
+<option value="enfant">Les enfants</option>
+<option value="frere">Frères et sœurs</option>
+<option value="neveu">Neveux et nièces</option>
+<option value="autre">Autres héritiers</option>
+</select>
+<label>Patrimoine net transmis (€)</label><input type="number" id="s-pat" value="400000" min="0" step="5000">
+<p class="hint">Biens après déduction des dettes.</p>
+<label>Nombre d'héritiers</label><input type="number" id="s-n" value="2" min="1" max="20">
+<div id="s-conj-w">
+<label>Conjoint survivant</label>
+<select id="s-conj">
+<option value="non">Pas de conjoint survivant</option>
+<option value="quart">Conjoint : ¼ en pleine propriété</option>
+<option value="usu">Conjoint : usufruit de la totalité</option>
+</select>
+<div id="s-ageconj-w" class="hide"><label>Âge du conjoint survivant</label><input type="number" id="s-ageconj" value="70" min="18" max="110"></div>
+<p class="hint">Le conjoint survivant est exonéré de droits de succession.</p>
+</div>
+<label>Dont biens immobiliers (facultatif)</label><input type="number" id="s-immo" value="0" min="0" step="5000">
+<label>Dont résidence principale occupée par le conjoint ou un enfant (facultatif)</label><input type="number" id="s-rp" value="0" min="0" step="5000">
+<p class="hint">Abattement de 20 % sur sa valeur.</p>
+<label>Donations déjà reçues par chaque héritier depuis moins de 15 ans (facultatif)</label><input type="number" id="s-don" value="0" min="0" step="1000">
+</div>
+<div class="out" id="s-out"></div>
+</div></section>
+
+<!-- 4. CESSION -->
+<section class="sim" id="s-ces"><div class="card">
+<div class="in">
+<p class="intro">Droits d'enregistrement dus lors de la cession d'un fonds de commerce, de parts sociales ou d'actions.</p>
+<label>Ce qui est cédé</label>
+<select id="c-type">
+<option value="fonds">Un fonds de commerce</option>
+<option value="parts">Des parts sociales (SARL, SNC…)</option>
+<option value="actions">Des actions (SAS, SA…)</option>
+<option value="immo">Des parts d'une société à prépondérance immobilière</option>
+</select>
+<label>Prix de cession (€)</label><input type="number" id="c-prix" value="250000" min="0" step="1000">
+<div id="c-parts-w" class="hide">
+<label>Nombre de parts cédées</label><input type="number" id="c-pc" value="100" min="1">
+<label>Nombre total de parts de la société</label><input type="number" id="c-pt" value="1000" min="1">
+<p class="hint">L'abattement de 23 000 € est proratisé selon la part cédée.</p>
+</div>
+<label>Honoraires de rédaction de l'acte (facultatif)</label><input type="number" id="c-hon" value="0" min="0" step="100">
+<p class="hint">Ces honoraires ne sont pas réglementés : ils sont fixés par l'étude. Renseignez-les si vous les connaissez.</p>
+</div>
+<div class="out" id="c-out"></div>
+</div></section>
+
+<!-- 5. COMPARATEUR -->
+<section class="sim" id="s-cmp"><div class="card" style="display:block">
+<div class="tabs" id="cmp-tabs"></div>
+<div class="cmp" id="cmp-body"></div>
+</div></section>
+
+<footer>Les montants sont des estimations établies à partir des barèmes réglementés et des taux fiscaux connus à la date de la démonstration. Ils ne remplacent pas un décompte établi par l'étude.</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const E=n=>Math.round(n).toLocaleString('fr-FR')+' €';
+const P=(n,d=1)=>n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d})+' %';
+const num=id=>Math.max(0,parseFloat($(id).value)||0);
+function tranche(x,t){let r=0,prev=0;for(const [lim,rate] of t){if(x>prev)r+=(Math.min(x,lim)-prev)*rate;prev=lim;}return r}
+const row=(l,v,s)=>`<div class="row"><span>${l}${s?`<small>${s}</small>`:''}</span><b>${v}</b></div>`;
+const bar=a=>`<div class="bar">${a.map(([v,c])=>`<span style="width:${v}%;background:${c}"></span>`).join('')}</div>`;
+function seg(id,cb){const el=$(id);el.querySelectorAll('button').forEach(b=>b.onclick=()=>{el.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');cb()});return()=>el.querySelector('.on').dataset.v}
+
+/* Barèmes */
+const EMOL_MUT=[[6500,.0387],[17000,.01596],[60000,.01064],[Infinity,.00799]];      // actes de vente (HT)
+const EMOL_DEC=[[6500,.01548],[17000,.00851],[60000,.0058],[Infinity,.00426]];       // déclaration de succession (HT)
+const EMOL_ATT=[[6500,.01935],[17000,.01064],[60000,.00726],[Infinity,.00532]];     // attestation immobilière (HT)
+const TVA=1.2;
+const B_DIRECT=[[8072,.05],[12109,.10],[15932,.15],[552324,.20],[902838,.30],[1805677,.40],[Infinity,.45]];
+const B_CONJ=[[8072,.05],[15932,.10],[31865,.15],[552324,.20],[902838,.30],[1805677,.40],[Infinity,.45]];
+const B_FRERE=[[24430,.35],[Infinity,.45]];
+const B_NEVEU=[[Infinity,.55]], B_AUTRE=[[Infinity,.60]];
+const LIEN={
+ enfant:{abat:100000,b:B_DIRECT,n:'Enfant'},
+ conjoint:{abat:80724,b:B_CONJ,n:'Époux / partenaire de Pacs'},
+ petit:{abat:31865,b:B_DIRECT,n:'Petit-enfant'},
+ arriere:{abat:5310,b:B_DIRECT,n:'Arrière-petit-enfant'},
+ frere:{abat:15932,b:B_FRERE,n:'Frère ou sœur'},
+ neveu:{abat:7967,b:B_NEVEU,n:'Neveu ou nièce'},
+ autre:{abat:1594,b:B_AUTRE,n:'Autre personne'}};
+function usufruit(age){return age<21?.9:age<31?.8:age<41?.7:age<51?.6:age<61?.5:age<71?.4:age<81?.3:age<91?.2:.1}
+
+/* 1. ACHAT */
+const aType=seg('a-type',()=>{$('a-hint').textContent={ancien:'Logement de plus de 5 ans ou déjà habité.',neuf:'Logement neuf (VEFA ou moins de 5 ans) : droits réduits, TVA incluse dans le prix.',terrain:'Terrain à bâtir : taux plein retenu pour cette estimation.'}[aType()];calcA()});
+function calcA(){
+ const prix=num('a-prix'),mob=Math.min(num('a-mob'),prix),base=prix-mob,t=aType();
+ const tD=parseFloat($('a-dep').value)/100;
+ const taux=t==='neuf'?.00715:tD+.012+tD*.0237;
+ const dmto=base*taux,emol=tranche(base,EMOL_MUT)*TVA,csi=Math.max(base*.001,base?15:0),form=base?1200:0;
+ const tot=dmto+emol+csi+form;
+ $('a-out').innerHTML=`<div class="sub">Frais de notaire estimés</div><div class="big">${E(tot)}</div><div class="sub">soit ${P(prix?tot/prix*100:0)} du prix d'achat</div>
+ ${bar([[dmto/tot*100||0,'#14213D'],[emol/tot*100||0,'#A98B4B'],[csi/tot*100||0,'#6B6F76'],[form/tot*100||0,'#cfcab9']])}
+ <h3>Détail</h3>
+ ${row('Droits de mutation',E(dmto),t==='neuf'?'Taux réduit pour le neuf':`Taux global ${P(taux*100,2)} (départemental, communal, frais d'assiette)`)}
+ ${row('Émoluments du notaire',E(emol),'Barème réglementé, TVA 20 % incluse')}
+ ${row('Contribution de sécurité immobilière',E(csi),'0,10 % reversé à l\'État')}
+ ${row('Formalités et débours',E(form),'Cadastre, urbanisme, publication (estimation)')}
+ <div class="tot"><span>Budget total à prévoir</span><span>${E(prix+tot)}</span></div>
+ <p class="note">Estimation indicative, hors frais de prêt et de garantie. Barème des émoluments fixé par l'arrêté du 25 février 2026 ; taux départemental à confirmer par l'étude.</p>`}
+['a-prix','a-dep','a-mob'].forEach(i=>$(i).oninput=calcA);
+
+/* 2. DONATION */
+const dType=seg('d-type',()=>{const t=dType();$('d-nue-w').classList.toggle('hide',t==='argent');$('d-manuel-w').classList.toggle('hide',t!=='argent');$('d-790').closest('label').classList.toggle('hide',t!=='argent');calcD()});
+function calcD(){
+ const t=dType(),m=num('d-montant'),l=LIEN[$('d-lien').value],lien=$('d-lien').value,age=num('d-age'),maj=$('d-maj').checked;
+ const nue=t!=='argent'&&$('d-nue').checked;
+ const val=nue?m*(1-usufruit(age)):m;
+ const ant=num('d-ant');
+ const abatP=Math.max(0,l.abat-ant)+($('d-hand').checked?159325:0);
+ const famOK=t==='argent'&&age<80&&maj&&['enfant','petit','arriere','neveu'].includes(lien);
+ const fam=famOK?Math.min(31865,Math.max(0,val-abatP)):0;
+ const a790=(t==='argent'&&$('d-790').checked&&['enfant','petit','arriere','neveu'].includes(lien))?Math.min(100000,Math.max(0,val-abatP-fam)):0;
+ const taxable=Math.max(0,val-abatP-fam-a790);
+ const droits=tranche(taxable,l.b);
+ const notarie=!(t==='argent'&&$('d-manuel').checked);
+ const emol=notarie?tranche(val,EMOL_MUT)*TVA:0,form=notarie?400:0,frais=emol+form;
+ const tot=droits+frais;
+ $('d-out').innerHTML=`<div class="sub">Coût total estimé de la donation</div><div class="big">${E(tot)}</div><div class="sub">soit ${P(m?tot/m*100:0)} de la valeur donnée${taxable===0&&droits===0?', donation sans droits à payer':''}</div>
+ <h3>Droits de donation</h3>
+ ${row('Valeur transmise',E(val),nue?`Nue-propriété (usufruit ${P(usufruit(age)*100,0)} selon l'âge)`:'')}
+ ${row('Abattement personnel',E(-abatP),`${l.n}${ant?` (donations antérieures déduites)`:''}${$('d-hand').checked?' + handicap':''} – renouvelable tous les 15 ans`)}
+ ${fam?row('Don familial de sommes d\'argent',E(-fam),'Donateur de moins de 80 ans, bénéficiaire majeur'):''}
+ ${a790?row('Exonération logement neuf / rénovation',E(-a790),'Dispositif jusqu\'au 31/12/2026'):''}
+ ${row('Part taxable',E(taxable))}
+ ${row('Droits à payer',E(droits),'Barème progressif selon le lien de parenté')}
+ <h3>Frais de notaire</h3>
+ ${notarie?row('Émoluments et formalités',E(frais),'Estimation : barème réglementé, TVA incluse'):row('Aucun frais de notaire obligatoire','0 €','Don manuel déclarable en ligne')}
+ <div class="tot"><span>Total à prévoir</span><span>${E(tot)}</span></div>
+ <p class="note">Estimation indicative fondée sur les abattements et barèmes en vigueur en 2026. Les règles dépendent de votre situation (régime matrimonial, démembrement, valorisation des biens) : demandez un décompte à l'étude.</p>`}
+['d-montant','d-lien','d-age','d-maj','d-nue','d-manuel','d-790','d-hand','d-ant'].forEach(i=>$(i).oninput=calcD);
+$('d-790').closest('label').classList.remove('hide');
+
+/* 3. SUCCESSION */
+function calcS(){
+ const her=$('s-her').value,pat=num('s-pat'),n=Math.max(1,Math.round(num('s-n'))),conj=$('s-conj').value;
+ $('s-conj-w').classList.toggle('hide',her!=='enfant');
+ $('s-ageconj-w').classList.toggle('hide',!(her==='enfant'&&conj==='usu'));
+ let partH=1;
+ if(her==='enfant'){ if(conj==='quart')partH=.75; if(conj==='usu')partH=1-usufruit(num('s-ageconj')); }
+ const immo=Math.min(num('s-immo'),pat),rp=Math.min(num('s-rp'),pat);
+ const baseTot=pat*partH-rp*partH*.2;
+ const par=baseTot/n, don=num('s-don');
+ const cfg={enfant:{abat:100000,b:B_DIRECT},frere:{abat:15932,b:B_FRERE},neveu:{abat:7967,b:B_NEVEU},autre:{abat:1594,b:B_AUTRE}}[her];
+ const abat=Math.max(0,cfg.abat-(her==='enfant'?don:0));
+ const taxable=Math.max(0,par-abat),droitsH=tranche(taxable,cfg.b),droits=droitsH*n;
+ const notor=56.6*TVA,decl=tranche(pat,EMOL_DEC)*TVA,att=tranche(immo,EMOL_ATT)*TVA,taxes=25,form=400;
+ const frais=notor+decl+att+taxes+form;
+ const tot=droits+frais;
+ $('s-out').innerHTML=`<div class="sub">Coût total estimé de la succession</div><div class="big">${E(tot)}</div><div class="sub">soit ${P(pat?tot/pat*100:0)} du patrimoine transmis</div>
+ ${bar([[droits/tot*100||0,'#14213D'],[frais/tot*100||0,'#A98B4B']])}
+ <h3>Droits de succession</h3>
+ ${row('Part de chaque héritier',E(par),conj!=='non'&&her==='enfant'?'Après part du conjoint survivant (exonérée)':'')}
+ ${row('Abattement personnel',E(-Math.min(abat,par)),'Renouvelé tous les 15 ans')}
+ ${row('Part taxable',E(taxable))}
+ ${row('Droits par héritier',E(droitsH))}
+ ${row(`Droits pour les ${n} héritier${n>1?'s':''}`,E(droits))}
+ <h3>Frais de notaire</h3>
+ ${row('Acte de notoriété',E(notor),'Désigne les héritiers')}
+ ${row('Déclaration de succession',E(decl),'Émoluments proportionnels à l\'actif')}
+ ${immo?row('Attestation immobilière',E(att),'Publicité foncière des biens immobiliers'):''}
+ ${row('Taxes et formalités',E(taxes+form),'Estimation')}
+ <div class="tot"><span>Chaque héritier reçoit (après droits)</span><span>${E(par-droitsH)}</span></div>
+ <p class="note">Estimation indicative fondée sur les abattements et barèmes en vigueur en 2026 (hors assurance-vie, dettes particulières et exonérations spécifiques). Le décompte exact est établi par l'étude.</p>`}
+['s-her','s-pat','s-n','s-conj','s-ageconj','s-immo','s-rp','s-don'].forEach(i=>$(i).oninput=calcS);
+
+/* 4. CESSION */
+function calcC(){
+ const t=$('c-type').value,prix=num('c-prix'),hon=num('c-hon');
+ $('c-parts-w').classList.toggle('hide',t!=='parts');
+ let lignes=[],droits=0,intro='';
+ if(t==='fonds'){
+  const a=Math.min(prix,23000),b=Math.max(0,Math.min(prix,200000)-23000),c=Math.max(0,prix-200000);
+  droits=b*.03+c*.05;
+  lignes=[row('Fraction exonérée',E(0),'Jusqu\'à 23 000 €'),row('Fraction taxée à 3 %',E(b*.03),'De 23 000 à 200 000 €'),row('Fraction taxée à 5 %',E(c*.05),'Au-delà de 200 000 €')];
+ } else if(t==='parts'){
+  const pc=num('c-pc'),pt=Math.max(1,num('c-pt')),ab=Math.min(prix,23000*Math.min(1,pc/pt));
+  droits=Math.max(0,prix-ab)*.03;
+  lignes=[row('Abattement proratisé',E(-ab),`23 000 € × ${pc}/${pt} parts`),row('Base taxable',E(Math.max(0,prix-ab))),row('Droits à 3 %',E(droits))];
+ } else if(t==='actions'){
+  droits=prix*.001;lignes=[row('Droits à 0,1 %',E(droits),'Sur le prix de cession des actions')];
+ } else {
+  droits=prix*.05;lignes=[row('Droits à 5 %',E(droits),'Société à prépondérance immobilière')];
+ }
+ const tot=droits+hon;
+ $('c-out').innerHTML=`<div class="sub">Droits d'enregistrement estimés</div><div class="big">${E(droits)}</div><div class="sub">soit ${P(prix?droits/prix*100:0)} du prix de cession</div>
+ ${bar([[100,'#14213D']])}
+ <h3>Droits d'enregistrement</h3>
+ ${row('Prix de cession',E(prix))}
+ ${lignes.join('')}
+ ${row('Droits d\'enregistrement',E(droits))}
+ <h3>Autres frais</h3>
+ ${row('Honoraires de rédaction de l\'acte',hon?E(hon):'À définir','Libres, fixés par l\'étude')}
+ ${row('Formalités et publicité','À définir','Selon l\'opération')}
+ <div class="tot"><span>Budget total pour l'acquéreur</span><span>${E(prix+droits+hon)}</span></div>
+ <p class="note">Estimation indicative fondée sur les droits d'enregistrement en vigueur. Prix, dettes et honoraires peuvent modifier le calcul : l'étude établit le décompte définitif. Hors TVA éventuelle.</p>`}
+['c-type','c-prix','c-pc','c-pt','c-hon'].forEach(i=>$(i).oninput=calcC);
+
+/* 5. COMPARATEUR */
+const CMP={
+ 'Formalités':[['Comment s\'engage-t-on ?',['Célébration du mariage en mairie.','Déclaration conjointe à la mairie ou chez un notaire, avec convention.','Aucune formalité : c\'est une situation de fait.']],
+  ['Quels engagements entre les deux personnes ?',['Fidélité, secours, assistance et communauté de vie.','Aide matérielle et assistance réciproque, vie commune.','Aucune obligation légale.']]],
+ 'Les biens':[['Que deviennent les biens acquis ?',['Régime légal de la communauté de biens acquis, ou contrat de mariage au choix.','Séparation des biens par défaut, indivision possible par convention.','Chacun reste propriétaire de ce qu\'il achète ; indivision en cas d\'achat commun.']],
+  ['Peut-on adapter ?',['Oui : contrat de mariage, changement de régime possible.','Oui : convention de Pacs modifiable.','Oui : convention d\'indivision pour un achat commun.']]],
+ 'En cas de décès':[['Le survivant hérite-t-il ?',['Oui : le conjoint survivant est héritier.','Non, sauf testament.','Non, sauf testament.']],
+  ['Et fiscalement ?',['Exonération de droits de succession.','Exonération de droits sur ce qui est légué.','Droits de 60 % sur un legs après un abattement de 1 594 €.']]],
+ 'Impôts et donations':[['Imposition sur le revenu',['Déclaration commune.','Déclaration commune.','Déclarations séparées.']],
+  ['Donations entre les deux personnes',['Abattement de 80 724 € renouvelable tous les 15 ans.','Abattement de 80 724 € renouvelable tous les 15 ans.','Abattement de 1 594 €, taxation à 60 % au-delà.']]],
+ 'Séparation':[['Comment se sépare-t-on ?',['Divorce, avec liquidation du régime matrimonial par notaire.','Dissolution déclarée, puis partage des biens indivis.','Rupture libre, partage éventuel de l\'indivision.']],
+  ['Faut-il passer par un notaire ?',['Oui, pour liquider les biens (immobilier notamment).','Souvent, pour le partage d\'un bien immobilier commun.','Si un bien est détenu en indivision.']]]};
+const NOMS=['Mariage','Pacs','Concubinage'];
+function showCmp(k){
+ $('cmp-tabs').innerHTML=Object.keys(CMP).map(x=>`<button class="${x===k?'on':''}" data-k="${x}">${x}</button>`).join('');
+ $('cmp-tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>showCmp(b.dataset.k));
+ $('cmp-body').innerHTML=CMP[k].map(([q,r])=>`<div class="q">${q}</div><div class="three">${r.map((t,i)=>`<div class="opt"><em>${NOMS[i]}</em>${t}</div>`).join('')}</div>`).join('')+'<p class="note">Informations générales, à adapter à votre situation. Un notaire peut vous conseiller sur le choix de votre statut.</p>';
+}
+showCmp('Formalités');
+
+/* Navigation */
+const SIMS=[['s-achat','Frais d\'achat immobilier',calcA],['s-don','Donation',calcD],['s-suc','Succession',calcS],['s-ces','Cession d\'entreprise',calcC],['s-cmp','Mariage, Pacs, concubinage',()=>{}]];
+$('nav').innerHTML=SIMS.map(([id,n])=>`<button data-id="${id}">${n}</button>`).join('');
+$('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>open(b.dataset.id));
+function open(id){document.querySelectorAll('section.sim').forEach(s=>s.classList.toggle('on',s.id===id));$('nav').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));SIMS.find(s=>s[0]===id)[2]();location.hash=id}
+dType();
+open((SIMS.find(s=>'#'+s[0]===location.hash)||SIMS[0])[0]);
+</script>
+</body>
+</html>
